@@ -4,6 +4,10 @@ import {useState} from "react";
 import {v1} from 'uuid';
 import {normalizedNumbersForDate} from './common/common';
 import {FullInput} from './features/fullInput/FullInput';
+import {SearchAppBar} from './features/appBar/SearchAppBar';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 
 export type TodolistType = {
     todoId: string
@@ -47,7 +51,7 @@ export const App = () => {
         setTasks({...tasks, [todoId]: []})
     }
     const createTask = (todoId: string, title: string) => {
-            setTasks({...tasks, [todoId]: [{id: v1(), title, isDone: false}, ...tasks[todoId]],})
+        setTasks({...tasks, [todoId]: [{id: v1(), title, isDone: false}, ...tasks[todoId]],})
     }
     const changeTaskStatus = (todoId: string, taskId: string, isDone: boolean) => {
         setTasks({...tasks, [todoId]: tasks[todoId].map(t => t.id === taskId ? {...t, isDone} : t)})
@@ -62,9 +66,9 @@ export const App = () => {
         setTasks({...tasks})
     }
     const createTodolist = (title: string) => {
-            let todoId = v1()
-            setTodolists([{todoId, title, filter: 'all'}, ...todolists])
-            setTasks({...tasks, [todoId]: []})
+        let todoId = v1()
+        setTodolists([{todoId, title, filter: 'all'}, ...todolists])
+        setTasks({...tasks, [todoId]: []})
     }
     const changeTitleTodolist = (todoId: string, title: string) => {
         setTodolists(todolists.map(todo => todo.todoId === todoId ? {...todo, title} : todo))
@@ -75,22 +79,33 @@ export const App = () => {
 
     return (
         <div className="app">
-            <FullInput onClick={createTodolist}/>
-            {todolists.map(todolist => <Todolist changeTaskTitle={changeTaskTitle}
-                                                 changeTodolistTitle={changeTitleTodolist}
-                                                 deleteTodolist={deleteTodolist}
-                                                 changeTaskFilter={changeTaskFilter}
-                                                 key={todolist.todoId}
-                                                 todolist={todolist}
-                                                 title={todolist.title}
-                                                 tasks={tasks[todolist.todoId]}
-                                                 date={date}
-                                                 time={timeCreate}
-                                                 removeTask={removeTask}
-                                                 removeAllTask={removeAllTask}
-                                                 addTask={createTask}
-                                                 changeTaskStatus={changeTaskStatus}/>)}
-
+            <SearchAppBar/>
+            <Container sx={{p: '30px'}} maxWidth={'lg'}>
+                <Grid container>
+                    <FullInput onClick={createTodolist}/>
+                </Grid>
+                <Grid container spacing={4}>
+                    {todolists.map(todolist => <Paper key={todolist.todoId}
+                                                      sx={{m: '30px 0', p: '20px'}}>
+                        <Grid>
+                            <Todolist changeTaskTitle={changeTaskTitle}
+                                      changeTodolistTitle={changeTitleTodolist}
+                                      deleteTodolist={deleteTodolist}
+                                      changeTaskFilter={changeTaskFilter}
+                                      todolist={todolist}
+                                      title={todolist.title}
+                                      tasks={tasks[todolist.todoId]}
+                                      date={date}
+                                      time={timeCreate}
+                                      removeTask={removeTask}
+                                      removeAllTask={removeAllTask}
+                                      addTask={createTask}
+                                      changeTaskStatus={changeTaskStatus}/>
+                        </Grid>
+                    </Paper>)
+                    }
+                </Grid>
+            </Container>
         </div>
     )
 }

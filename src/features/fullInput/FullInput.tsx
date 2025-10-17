@@ -1,7 +1,6 @@
-import {Button} from '../button/Button';
 import {useState} from 'react';
 import {Input} from '../../Input';
-
+import Button from '@mui/material/Button';
 
 type PropsType = {
     onClick: (value: string) => void
@@ -12,7 +11,7 @@ export const FullInput = ({onClick}: PropsType) => {
     const [value, setValue] = useState<string>('')
 
     const onClickHandler = () => {
-        if(value.trim() !== '') {
+        if (value.trim() !== '') {
             onClick(value)
             setValue('')
         } else {
@@ -20,20 +19,22 @@ export const FullInput = ({onClick}: PropsType) => {
         }
     }
     const setValueHandler = (value: string) => {
-            setValue(value)
+        setValue(value)
         setError('')
 
     }
     const onKeyDown = () => {
         onClickHandler()
     }
+    const setNoError = () => {
+        setError('')
+    }
 
 
     return (
         <div>
-            <Input onKeyDown={onKeyDown} value={value} error={error} setValue={setValueHandler}/>
-            <Button title={'+'} onClick={onClickHandler}/>
-            <div className={'error-message'}>{error}</div>
+            <Input setNoError={setNoError} onKeyDown={onKeyDown} value={value} error={error} setValue={setValueHandler}/>
+            <Button onClick={onClickHandler} size={'small'} variant="contained">+</Button>
         </div>
     )
 }

@@ -1,5 +1,6 @@
 import {ChangeEvent, useState} from 'react';
 import {KeyboardEvent} from 'react/index';
+import TextField from '@mui/material/TextField';
 
 type EditableSpanType = {
     value: string
@@ -8,15 +9,21 @@ type EditableSpanType = {
 }
 
 export const EditableSpan = ({value, changeTitle, className}: EditableSpanType) => {
-    const [isEditMode, setEditMode] = useState(false)
-    const [inputValue, setInputValue] = useState(value)
+    const [isEditMode, setEditMode] = useState<boolean>(false)
+    const [inputValue, setInputValue] = useState<string>(value)
+    const [error, setError] = useState<string>('')
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.currentTarget.value)
+        setError('')
     }
     const changeTitleHandler = () => {
-        changeTitle(inputValue)
-        setEditMode(false)
+        if (inputValue.trim() !== '') {
+            changeTitle(inputValue)
+            setEditMode(false)
+        } else {
+            setError(`Title can't be empty`)
+        }
     }
     const onEditMode = () => {
         setEditMode(true)
@@ -29,8 +36,15 @@ export const EditableSpan = ({value, changeTitle, className}: EditableSpanType) 
 
     return <>
         {isEditMode
-            ? <input onKeyDown={onKeyDownHandler} autoFocus onBlur={changeTitleHandler} onChange={onChangeHandler}
-                     value={inputValue} type="text"/>
+            ? <TextField error={error}
+                         size={'small'}
+                         onKeyDown={onKeyDownHandler}
+                         autoFocus
+                         onBlur={changeTitleHandler}
+                         onChange={onChangeHandler}
+                         value={inputValue}
+                         helperText={error ? error : ''}
+            />
             : <span className={className} onDoubleClick={onEditMode}>{value}</span>}
     </>
 }
