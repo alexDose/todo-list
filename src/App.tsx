@@ -1,20 +1,34 @@
 import {FilterValue, TaskType, Todolist} from "./features/todolist/Todolist";
 import './App.css'
-import {useState} from "react";
+import {useReducer, useState} from "react";
 import {v1} from 'uuid';
-import {normalizedNumbersForDate} from './common/common';
+import {getFilteredTasks, normalizedNumbersForDate} from './common/common';
 import {FullInput} from './features/fullInput/FullInput';
 import {SearchAppBar} from './features/appBar/SearchAppBar';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import {
+    changeTodolistFilterAC,
+    changeTodolistTitleAC,
+    createTodolistAC, deleteTodolistAC,
+    todolistReducer
+} from './model/todolist-reducer';
+import {
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    createTaskAC,
+    deleteAllTasksAC,
+    deleteTaskAC,
+    tasksReducer
+} from './model/tasks-reducer';
 
 export type TodolistType = {
     todoId: string
     title: string
     filter: FilterValue
 }
-type TasksType = {
+export type TasksType = {
     [key: string]: TaskType[]
 }
 
@@ -22,59 +36,58 @@ export const App = () => {
     const [newDate] = useState(new Date())
     const date = `${normalizedNumbersForDate(newDate.getDate())}.${normalizedNumbersForDate(newDate.getMonth())}.${newDate.getFullYear()}`
     const timeCreate = `${normalizedNumbersForDate(newDate.getHours())}:${normalizedNumbersForDate(newDate.getMinutes())}`
+    //
+    // const todolistId1 = v1()
+    // const todolistId2 = v1()
+    //
+    const [todolists, dispatchTodolist] = useReducer(todolistReducer, [])
+    // const [todolists, setTodolists] = useState<TodolistType[]>([
+    //     {todoId: todolistId1, title: 'What to learn', filter: 'all'},
+    //     {todoId: todolistId2, title: 'What to buy', filter: 'all'},
+    // ])
+    const [tasks, dispatchTasks] = useReducer(tasksReducer, {})
 
-    const todolistId1 = v1()
-    const todolistId2 = v1()
+    // const [tasks, setTasks] = useState<TasksType>({
+    //     [todolistId1]: [
+    //         {id: v1(), title: 'HTML&CSS', isDone: true},
+    //         {id: v1(), title: 'JS', isDone: true},
+    //         {id: v1(), title: 'ReactJS', isDone: false},
+    //     ],
+    //     [todolistId2]: [
+    //         {id: v1(), title: 'Rest API', isDone: true},
+    //         {id: v1(), title: 'GraphQL', isDone: false},
+    //     ],
+    // })
+    //
 
-    const [todolists, setTodolists] = useState<TodolistType[]>([
-        {todoId: todolistId1, title: 'What to learn', filter: 'all'},
-        {todoId: todolistId2, title: 'What to buy', filter: 'all'},
-    ])
-
-    const [tasks, setTasks] = useState<TasksType>({
-        [todolistId1]: [
-            {id: v1(), title: 'HTML&CSS', isDone: true},
-            {id: v1(), title: 'JS', isDone: true},
-            {id: v1(), title: 'ReactJS', isDone: false},
-        ],
-        [todolistId2]: [
-            {id: v1(), title: 'Rest API', isDone: true},
-            {id: v1(), title: 'GraphQL', isDone: false},
-        ],
-    })
-
-
-    const removeTask = (todoId: string, taskId: string) => {
-        setTasks({...tasks, [todoId]: tasks[todoId].filter(task => task.id !== taskId)})
+    const deleteTask = (todoId: string, taskId: string) => {
+        dispatchTasks(deleteTaskAC({todoId, taskId}))
     }
-    const removeAllTask = (todoId: string) => {
-        setTasks({...tasks, [todoId]: []})
+    const deleteAllTask = (todoId: string) => {
+        dispatchTasks(deleteAllTasksAC(todoId))
     }
     const createTask = (todoId: string, title: string) => {
-        setTasks({...tasks, [todoId]: [{id: v1(), title, isDone: false}, ...tasks[todoId]],})
+        dispatchTasks(createTaskAC({todoId, title}))
     }
     const changeTaskStatus = (todoId: string, taskId: string, isDone: boolean) => {
-        setTasks({...tasks, [todoId]: tasks[todoId].map(t => t.id === taskId ? {...t, isDone} : t)})
+        dispatchTasks(changeTaskStatusAC({todoId, taskId, isDone}))
     }
-
-    const changeTaskFilter = (todoId: string, filter: FilterValue) => {
-        setTodolists(todolists.map(todo => todo.todoId === todoId ? {...todo, filter} : todo))
+    const changeTodolistFilter = (todoId: string, filter: FilterValue) => {
+        dispatchTodolist(changeTodolistFilterAC({todoId, filter}))
     }
     const deleteTodolist = (todoId: string) => {
-        setTodolists(todolists.filter(todo => todo.todoId !== todoId))
-        delete tasks[todoId]
-        setTasks({...tasks})
+        dispatchTodolist(deleteTodolistAC(todoId))
     }
     const createTodolist = (title: string) => {
-        let todoId = v1()
-        setTodolists([{todoId, title, filter: 'all'}, ...todolists])
-        setTasks({...tasks, [todoId]: []})
+        const todolistId = v1()
+        dispatchTodolist(createTodolistAC(todolistId, title))
+        dispatchTasks(createTodolistAC(todolistId, title))
     }
-    const changeTitleTodolist = (todoId: string, title: string) => {
-        setTodolists(todolists.map(todo => todo.todoId === todoId ? {...todo, title} : todo))
+    const changeTodolistTitle = (todoId: string, title: string) => {
+        dispatchTodolist(changeTodolistTitleAC({todoId, title}))
     }
     const changeTaskTitle = (todoId: string, taskId: string, title: string) => {
-        setTasks({...tasks, [todoId]: tasks[todoId].map(t => t.id === taskId ? {...t, title} : t)})
+        dispatchTasks(changeTaskTitleAC({todoId, taskId, title}))
     }
 
     return (
@@ -85,20 +98,22 @@ export const App = () => {
                     <FullInput onClick={createTodolist}/>
                 </Grid>
                 <Grid container spacing={4}>
-                    {todolists.map(todolist => <Paper key={todolist.todoId}
+                    {
+                        !todolists ? <div>hui</div>
+                        :
+                        todolists.map(todolist => <Paper key={todolist.todoId}
                                                       sx={{m: '30px 0', p: '20px'}}>
                         <Grid>
                             <Todolist changeTaskTitle={changeTaskTitle}
-                                      changeTodolistTitle={changeTitleTodolist}
+                                      changeTodolistTitle={changeTodolistTitle}
                                       deleteTodolist={deleteTodolist}
-                                      changeTaskFilter={changeTaskFilter}
+                                      changeTaskFilter={changeTodolistFilter}
                                       todolist={todolist}
-                                      title={todolist.title}
-                                      tasks={tasks[todolist.todoId]}
+                                      tasks={tasks}
                                       date={date}
                                       time={timeCreate}
-                                      removeTask={removeTask}
-                                      removeAllTask={removeAllTask}
+                                      removeTask={deleteTask}
+                                      removeAllTask={deleteAllTask}
                                       addTask={createTask}
                                       changeTaskStatus={changeTaskStatus}/>
                         </Grid>

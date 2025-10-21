@@ -1,19 +1,19 @@
 import {ChangeEvent} from 'react';
 import {FullInput} from '../fullInput/FullInput';
 import {getFilteredTasks} from '../../common/common';
-import {TodolistType} from '../../App';
+import {TasksType, TodolistType} from '../../App';
 import '../../App.css'
 import {EditableSpan} from '../editableSpan/EditableSpan';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import {ButtonMUI} from '../button/Button';
 
 export type FilterValue = 'all' | 'completed' | 'active'
 
 type PropsType = {
-    tasks: TaskType[]
+    tasks: TasksType
     date: string
     time: string
     removeTask: (todoId: string, taskId: string) => void
@@ -78,10 +78,10 @@ export const Todolist = ({
                 <FullInput onClick={addTaskHandler}/>
             </div>
             <List>
-                {(getFilteredTasks(tasks, filter).length == 0)
-                    ? <div>tasks empty</div>
-                    : getFilteredTasks(tasks, filter).map(task => {
-
+                {/*{(getFilteredTasks(tasks[todoId], filter).length === 0)*/}
+                {/*    ? <div>tasks empty</div>*/}
+                {/*    : getFilteredTasks(tasks[todoId], filter).map(task => {*/}
+                {tasks[todoId].map(task => {
                         const removeTaskHandler = () => removeTask(todoId, task.id)
                         const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
                             changeTaskStatus(todoId, task.id, e.currentTarget.checked)
@@ -102,12 +102,12 @@ export const Todolist = ({
                 }
             </List>
             <div>
-                <Button size={'small'} variant={filter === 'all' ? 'contained' : 'outlined'} onClick={onAllClickHandler}>All</Button>
-                <Button size={'small'} variant={filter === 'active' ? 'contained' : 'outlined'} onClick={onActiveClickHandler}>Active</Button>
-                <Button size={'small'} variant={filter === 'completed' ? 'contained' : 'outlined'} onClick={onCompletedClickHandler}>Completed</Button>
+                <ButtonMUI onClick={onAllClickHandler} title={'All'} filter={filter}/>
+                <ButtonMUI onClick={onActiveClickHandler} title={'Active'} filter={filter}/>
+                <ButtonMUI onClick={onCompletedClickHandler} title={'Completed'} filter={filter}/>
             </div>
             <div>
-                <Button size={'small'} variant={'outlined'} onClick={deleteAllTaskHandler}>Delete all tasks</Button>
+                <ButtonMUI onClick={deleteAllTaskHandler} title={'Delete all tasks'} filter={'all'}/>
             </div>
             <div>
                 <span>{date}</span>

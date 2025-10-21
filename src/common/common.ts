@@ -1,6 +1,7 @@
 import {FilterValue, TaskType} from '../features/todolist/Todolist';
 
 export const getFilteredTasks = (tasks: TaskType[], filter: FilterValue) => {
+    debugger
     let filteredTasks = tasks
     switch (filter) {
         case 'active':
