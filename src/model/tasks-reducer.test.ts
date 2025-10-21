@@ -1,5 +1,5 @@
-import { beforeEach, expect, test } from 'vitest'
-import {TasksType} from '../App';
+import {beforeEach, expect, test} from 'vitest'
+import {TasksType} from '../app/App';
 import {
     changeTaskStatusAC,
     changeTaskTitleAC,
@@ -9,7 +9,6 @@ import {
     tasksReducer
 } from './tasks-reducer';
 import {createTodolistAC, deleteTodolistAC} from './todolist-reducer';
-import {v1} from 'uuid';
 import {newTodolistId} from './todolist-reducer.test';
 
 let startState: TasksType = {}

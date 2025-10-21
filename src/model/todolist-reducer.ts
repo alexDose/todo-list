@@ -1,5 +1,4 @@
-import {TodolistType} from '../App';
-import {v1} from 'uuid';
+import {TodolistType} from '../app/App';
 import {FilterValue} from '../features/todolist/Todolist';
 
 export type TodolistActionsType =

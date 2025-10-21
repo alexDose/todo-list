@@ -1,4 +1,4 @@
-import {TasksType} from '../App';
+import {TasksType} from '../app/App';
 import {CreateTodolistAction, DeleteTodolistAction} from './todolist-reducer';
 import {v1} from 'uuid';
 

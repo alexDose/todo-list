@@ -1,8 +1,8 @@
 import {ChangeEvent} from 'react';
 import {FullInput} from '../fullInput/FullInput';
 import {getFilteredTasks} from '../../common/common';
-import {TasksType, TodolistType} from '../../App';
-import '../../App.css'
+import {TasksType, TodolistType} from '../../app/App';
+import '../../app/App.css'
 import {EditableSpan} from '../editableSpan/EditableSpan';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Checkbox from '@mui/material/Checkbox';
@@ -78,10 +78,9 @@ export const Todolist = ({
                 <FullInput onClick={addTaskHandler}/>
             </div>
             <List>
-                {/*{(getFilteredTasks(tasks[todoId], filter).length === 0)*/}
-                {/*    ? <div>tasks empty</div>*/}
-                {/*    : getFilteredTasks(tasks[todoId], filter).map(task => {*/}
-                {tasks[todoId].map(task => {
+                {(getFilteredTasks(tasks[todoId], filter).length === 0)
+                    ? <div>tasks empty</div>
+                    : getFilteredTasks(tasks[todoId], filter).map(task => {
                         const removeTaskHandler = () => removeTask(todoId, task.id)
                         const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
                             changeTaskStatus(todoId, task.id, e.currentTarget.checked)

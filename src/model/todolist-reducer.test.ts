@@ -7,7 +7,7 @@ import {
     deleteTodolistAC,
     todolistReducer
 } from './todolist-reducer'
-import {TodolistType} from '../App';
+import {TodolistType} from '../app/App';
 
 export const newTodolistId = v1()
 let todolistId1: string
