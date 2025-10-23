@@ -3,29 +3,3 @@
   flex-direction: column;
   width: 100vw;
 }
-
-.app > div {
-  margin-right: 50px;
-}
-
-.error {
-  border: 1px solid red;
-}
-
-.error-message {
-  color: red;
-}
-
-.active-filter {
-  background-color: lightgreen;
-}
-
-.is-done {
-  opacity: 0.5;
-  text-decoration: line-through;
-}
-
-.container {
-  display: flex;
-  align-items: center;
-}

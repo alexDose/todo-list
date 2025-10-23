@@ -1,7 +1,7 @@
-import {FilterValue, TaskType} from '../features/todolist/Todolist';
+import {Task} from '@/features/todolists/model/tasks-reducer';
+import {FilterValues} from '@/features/todolists/model/todolists-reducer';
 
-export const getFilteredTasks = (tasks: TaskType[], filter: FilterValue) => {
-    debugger
+export const getFilteredTasks = (tasks: Task[], filter: FilterValues) => {
     let filteredTasks = tasks
     switch (filter) {
         case 'active':
@@ -12,11 +12,4 @@ export const getFilteredTasks = (tasks: TaskType[], filter: FilterValue) => {
         default:
             return filteredTasks
     }
-}
-
-export function normalizedNumbersForDate(num) {
-    if (num < 10) {
-        return `0${num}`
-    }
-    return `${num}`
 }

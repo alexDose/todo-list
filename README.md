@@ -1,4 +1,4 @@
-# IT-INCUBATOR Todolist Project
+# Todolist Project (MaterialUI)
 
 ## React + TypeScript + Vite
 
