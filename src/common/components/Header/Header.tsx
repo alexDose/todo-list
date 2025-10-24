@@ -1,4 +1,3 @@
-import {containerSx} from '@/features/todolists/ui/Todolists/TodolistItem/TodolistItem.styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import {NavButton} from '@/common/components/NavButton/NavButton';
 import AppBar from '@mui/material/AppBar'
@@ -11,6 +10,7 @@ import {selectThemeMode} from '@/app/app-selectors';
 import {getTheme} from '@/common/theme/theme';
 import {changeThemeModeAC} from '@/app/app-reducer';
 import {useAppDispatch} from '@/common/hooks/useAppDispatch';
+import {containerSx} from '@/common/styles/container.styles';
 
 export const Header = () => {
     const themeMode = useAppSelector(selectThemeMode)

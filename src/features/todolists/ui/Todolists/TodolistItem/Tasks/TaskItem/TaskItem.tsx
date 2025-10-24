@@ -1,4 +1,3 @@
-import {getListItemsSx} from '@/features/todolists/ui/Todolists/TodolistItem/TodolistItem.styles';
 import {EditableSpan} from '@/common/components/EditableSpan/EditableSpan';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Checkbox from '@mui/material/Checkbox'
@@ -8,7 +7,10 @@ import {changeTaskStatusAC, changeTaskTitleAC, deleteTaskAC, Task} from '@/featu
 import {ChangeEvent} from 'react/index';
 import {useAppDispatch} from '@/common/hooks/useAppDispatch';
 import {ListItem} from '@mui/material';
-import {getListItemSx} from '@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.styles';
+import {
+    getListItemsSx,
+    getListItemSx
+} from '@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.styles';
 
 type Props = {
     task: Task
