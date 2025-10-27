@@ -1,7 +1,7 @@
 import { EditableSpan } from '@/common/components'
 import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
-import { changeTodolistTitleAC, deleteTodolistAC, Todolist } from '@/features/todolists/model/todolists-reducer'
+import { changeTodolistTitleAC, deleteTodolistAC, Todolist } from '@/features/todolists/model/todolists-slice'
 import { useAppDispatch } from '@/common/hooks'
 import s from './TodolistTitle.module.css'
 

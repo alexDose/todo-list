@@ -1,5 +1,5 @@
-import { Task } from '@/features/todolists/model/tasks-reducer'
-import { FilterValues } from '@/features/todolists/model/todolists-reducer'
+import { Task } from '@/features/todolists/model/tasks-slice'
+import { FilterValues } from '@/features/todolists/model/todolists-slice'
 
 export const getFilteredTasks = (tasks: Task[], filter: FilterValues) => {
     let filteredTasks = tasks

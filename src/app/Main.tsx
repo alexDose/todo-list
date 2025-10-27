@@ -1,11 +1,11 @@
-import { CreateItemForm } from '@/common/components'
+import {CreateItemForm} from '@/common/components'
 import './App.css'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid2'
-import { createTodolistAC } from '@/features/todolists/model/todolists-reducer'
-import { Todolists } from '@/features/todolists/ui/Todolists/Todolists'
-import { AppHttpRequests } from '@/app/AppHttpRequests'
-import { useAppDispatch } from '@/common/hooks'
+import {createTodolistAC} from '@/features/todolists/model/todolists-slice'
+import {Todolists} from '@/features/todolists/ui/Todolists/Todolists'
+import {AppHttpRequests} from '@/app/AppHttpRequests'
+import {useAppDispatch} from '@/common/hooks'
 
 export const Main = () => {
     const dispatch = useAppDispatch()
@@ -17,12 +17,11 @@ export const Main = () => {
     return (
         <>
             <Container maxWidth={'lg'}>
-                <Grid container sx={{ mb: '30px' }}>
-                    <CreateItemForm onCreateItem={createTodolist} />
+                <Grid container sx={{mb: '30px'}}>
+                    <CreateItemForm onCreateItem={createTodolist}/>
                 </Grid>
-                <AppHttpRequests />
                 <Grid container spacing={4}>
-                    <Todolists />
+                    <Todolists/>
                 </Grid>
             </Container>
         </>

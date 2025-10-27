@@ -1,7 +1,7 @@
 import { ButtonMUI } from '@/common/components'
 import Box from '@mui/material/Box'
-import { deleteAllTasksAC } from '@/features/todolists/model/tasks-reducer'
-import { changeTodolistFilterAC, FilterValues, Todolist } from '@/features/todolists/model/todolists-reducer'
+import { deleteAllTasksAC } from '@/features/todolists/model/tasks-slice'
+import { changeTodolistFilterAC, FilterValues, Todolist } from '@/features/todolists/model/todolists-slice'
 import { useAppDispatch } from '@/common/hooks'
 
 type Props = {

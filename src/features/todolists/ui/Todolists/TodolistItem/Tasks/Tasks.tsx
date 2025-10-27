@@ -1,5 +1,5 @@
 import { getFilteredTasks } from '@/common/helpers'
-import { Todolist } from '@/features/todolists/model/todolists-reducer'
+import { Todolist } from '@/features/todolists/model/todolists-slice'
 import { useAppSelector } from '@/common/hooks'
 import { selectTasks } from '@/features/todolists/model/tasks-selectors'
 import List from '@mui/material/List'
