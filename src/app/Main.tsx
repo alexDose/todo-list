@@ -2,16 +2,15 @@ import {CreateItemForm} from '@/common/components'
 import './App.css'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid2'
-import {createTodolistAC} from '@/features/todolists/model/todolists-slice'
+import {createTodolistTC} from '@/features/todolists/model/todolists-slice'
 import {Todolists} from '@/features/todolists/ui/Todolists/Todolists'
-import {AppHttpRequests} from '@/app/AppHttpRequests'
 import {useAppDispatch} from '@/common/hooks'
 
 export const Main = () => {
     const dispatch = useAppDispatch()
 
     const createTodolist = (title: string) => {
-        dispatch(createTodolistAC(title))
+        dispatch(createTodolistTC(title))
     }
 
     return (
