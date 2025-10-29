@@ -93,7 +93,7 @@ export const AppHttpRequests = () => {
             deadline: task.deadline,
             status: task.status
         }
-        tasksApi.changeTaskTitle({taskId: task.id, todolistId: task.todoListId, model}).then(() => {
+        tasksApi.updateTask({taskId: task.id, todolistId: task.todoListId, model}).then(() => {
             setTasks({...tasks, [task.todoListId]: tasks[task.todoListId].map(t => t.id === task.id ? {...t, ...model} : t)})
         })
     }

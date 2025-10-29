@@ -1,9 +1,10 @@
-import { getFilteredTasks } from '@/common/helpers'
-import { useAppSelector } from '@/common/hooks'
+import {getFilteredTasks} from '@/common/helpers'
+import {useAppDispatch, useAppSelector} from '@/common/hooks'
 import List from '@mui/material/List'
-import { TaskItem } from '@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem'
+import {TaskItem} from '@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem'
 import {Todolist} from '@/features/todolists/api/todolistsApi.types';
-import {selectTasks} from '@/features/todolists/model/tasks-slice';
+import {fetchTasksTC, selectTasks} from '@/features/todolists/model/tasks-slice';
+import {useEffect} from 'react';
 
 type Props = {
     todolist: Todolist
@@ -12,6 +13,12 @@ type Props = {
 export const Tasks = ({ todolist }: Props) => {
     const { id, filter } = todolist
     const tasks = useAppSelector(selectTasks)
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(fetchTasksTC(id))
+    }, [])
 
     return (
         <>

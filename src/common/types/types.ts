@@ -4,3 +4,4 @@ export type BaseResponseType<T = {}> = {
     messages: string[]
     data: T
 }
+export type RequestStatus = 'idle' | 'loading' | 'succeeded' | 'failed'

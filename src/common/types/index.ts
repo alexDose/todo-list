@@ -1,1 +1,1 @@
-export type { BaseResponseType } from './types'
+export type * from './types'

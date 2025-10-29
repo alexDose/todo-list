@@ -7,13 +7,15 @@ import Container from '@mui/material/Container'
 import Switch from '@mui/material/Switch'
 import { useAppSelector } from '@/common/hooks'
 import { getTheme } from '@/common/theme'
-import {changeThemeModeAC, selectThemeMode} from '@/app/app-slice'
+import {changeThemeModeAC, selectStatus, selectThemeMode} from '@/app/app-slice'
 import { useAppDispatch } from '@/common/hooks'
 import { containerSx } from '@/common/styles'
 import { Clock } from '@/common/components/Clock/Clock'
+import LinearProgress from '@mui/material/LinearProgress'
 
 export const Header = () => {
     const themeMode = useAppSelector(selectThemeMode)
+    const appStatus = useAppSelector(selectStatus)
 
     const theme = getTheme(themeMode)
 
@@ -39,6 +41,7 @@ export const Header = () => {
                     </div>
                 </Container>
             </Toolbar>
+            {appStatus === 'loading' && <LinearProgress/>}
         </AppBar>
     )
 }

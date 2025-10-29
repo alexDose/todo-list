@@ -16,10 +16,6 @@ export const tasksApi = {
     },
     updateTask(payload: {todolistId: string, taskId: string, model: UpdateTaskModel}) {
         const {todolistId, taskId, model} = payload
-        return instance.put<BaseResponseType<{item: DomainTask}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, {model})
-    },
-    changeTaskTitle(payload: {todolistId: string, taskId: string, model: UpdateTaskModel}) {
-        const {todolistId, taskId, model} = payload
-        return instance.put<Omit<BaseResponseType, 'fieldsErrors'>>(`/todo-lists/${todolistId}/tasks/${taskId}`, {model})
+        return instance.put<BaseResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
     }
 }
