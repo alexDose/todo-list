@@ -13,6 +13,8 @@ import {
 } from '@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.styles'
 import {DomainTask} from '@/features/todolists/api/tasksApi.types';
 import {TaskStatus} from '@/common/enum';
+import {changeTodolistStatusAC} from '@/features/todolists/model/todolists-slice';
+import {useState} from 'react';
 
 type Props = {
     task: DomainTask
@@ -21,10 +23,12 @@ type Props = {
 export const TaskItem = ({ task, todolistId }: Props) => {
     const { id, title } = task
     const isTaskCompleted = task.status === TaskStatus.Completed
+    const [isDisabled, setDisabled] = useState(false)
 
     const dispatch = useAppDispatch()
 
     const deleteTask = () => {
+        setDisabled(true)
         dispatch(deleteTaskTC({ todolistId, taskId: id }))
     }
     const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +50,7 @@ export const TaskItem = ({ task, todolistId }: Props) => {
                 <Checkbox checked={isTaskCompleted} onChange={changeTaskStatus} />
                 <EditableSpan value={title} onChange={changeTaskTitle} />
             </Box>
-            <IconButton onClick={deleteTask}>
+            <IconButton disabled={isDisabled} onClick={deleteTask}>
                 <DeleteOutlineIcon />
             </IconButton>
         </ListItem>

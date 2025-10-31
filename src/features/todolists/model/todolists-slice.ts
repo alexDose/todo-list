@@ -2,9 +2,11 @@ import {Todolist} from '@/features/todolists/api/todolistsApi.types';
 import {todolistsApi} from '@/features/todolists/api/todolistsApi';
 import {createAppSlice} from '@/common/utils';
 import {changeAppStatus} from '@/app/app-slice';
+import {RequestStatus} from '@/common/types';
 
 export type DomainTodolist = Todolist & {
     filter: FilterValues
+    entityStatus: RequestStatus
 }
 
 export type FilterValues = 'all' | 'active' | 'completed'
@@ -13,7 +15,8 @@ export const todolistsSlice = createAppSlice({
         name: 'todolists',
         initialState: [] as DomainTodolist[],
         selectors: {
-            selectTodolists: (state: DomainTodolist[]) => state
+            selectTodolists: (state: DomainTodolist[]) => state,
+            selectStatusTodolist: state => state.entityStatus
         },
         reducers: create => ({
             fetchTodolistsTC: create.asyncThunk(
@@ -39,6 +42,7 @@ export const todolistsSlice = createAppSlice({
             deleteTodolistTC: create.asyncThunk(
                 async (id: string, thunkAPI) => {
                     try {
+                        thunkAPI.dispatch(changeTodolistStatusAC({id, entityStatus: 'loading'}))
                         await todolistsApi.deleteTodolist(id)
                         return {id}
                     } catch (error) {
@@ -93,12 +97,20 @@ export const todolistsSlice = createAppSlice({
                     state[index].filter = action.payload.filter
                 }
             }),
+            changeTodolistStatusAC: create.reducer<{id: string, entityStatus: RequestStatus}>((state, action) => {
+                const index = state.findIndex(todolist => todolist.id === action.payload.id)
+                if (index !== -1) {
+                    state[index].entityStatus = action.payload.entityStatus
+                }
+
+            }),
 
         }),
     }
 )
 
 export const {
+    changeTodolistStatusAC,
     fetchTodolistsTC,
     deleteTodolistTC,
     createTodolistTC,
@@ -107,5 +119,5 @@ export const {
 } = todolistsSlice.actions
 
 export const todolistsReducer = todolistsSlice.reducer
-export const {selectTodolists} = todolistsSlice.selectors
+export const {selectTodolists, selectStatusTodolist} = todolistsSlice.selectors
 

@@ -7,7 +7,7 @@ import Container from '@mui/material/Container'
 import Switch from '@mui/material/Switch'
 import { useAppSelector } from '@/common/hooks'
 import { getTheme } from '@/common/theme'
-import {changeThemeModeAC, selectStatus, selectThemeMode} from '@/app/app-slice'
+import {changeThemeMode, selectStatus, selectThemeMode} from '@/app/app-slice'
 import { useAppDispatch } from '@/common/hooks'
 import { containerSx } from '@/common/styles'
 import { Clock } from '@/common/components/Clock/Clock'
@@ -22,7 +22,7 @@ export const Header = () => {
     const dispatch = useAppDispatch()
 
     const changeThemeModeApp = () => {
-        dispatch(changeThemeModeAC(themeMode === 'light' ? 'dark' : 'light'))
+        dispatch(changeThemeMode(themeMode === 'light' ? 'dark' : 'light'))
     }
 
     return (

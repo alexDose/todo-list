@@ -4,10 +4,10 @@ import {createTaskTC} from '@/features/todolists/model/tasks-slice'
 import {TodolistTitle} from '@/features/todolists/ui/Todolists/TodolistItem/TodolistTitle/TodolistTitle'
 import {Tasks} from '@/features/todolists/ui/Todolists/TodolistItem/Tasks/Tasks'
 import {FilterButtons} from '@/features/todolists/ui/Todolists/TodolistItem/FilterButtons/FilterButtons'
-import {Todolist} from '@/features/todolists/api/todolistsApi.types';
+import {DomainTodolist} from '@/features/todolists/model/todolists-slice';
 
 type Props = {
-    todolist: Todolist
+    todolist: DomainTodolist
 }
 
 export const TodolistItem = (props: Props) => {
@@ -22,7 +22,7 @@ export const TodolistItem = (props: Props) => {
     return (
         <div>
             <TodolistTitle todolist={todolist} />
-            <CreateItemForm onCreateItem={createTask} />
+            <CreateItemForm onCreateItem={createTask} disabled={todolist.entityStatus === 'loading'}/>
             <Tasks todolist={todolist} />
             <FilterButtons todolist={todolist} />
         </div>

@@ -1,1 +1,1 @@
-export {TaskStatus, TaskPriority} from './enum'
+export {TaskStatus, TaskPriority, ResultCode} from './enum'
