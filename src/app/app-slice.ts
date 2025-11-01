@@ -15,10 +15,10 @@ export const appSlice = createSlice({
             state.themeMode = action.payload
         },
         changeAppStatus: (state, action) => {
-            state.status = action.payload
+            state.status = action.payload.status
         },
         setAppError: (state, action) => {
-            state.error = action.payload
+            state.error = action.payload.error
         }
     },
     selectors: {

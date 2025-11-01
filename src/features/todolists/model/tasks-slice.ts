@@ -1,7 +1,7 @@
 import {createTodolistTC, deleteTodolistTC} from './todolists-slice'
 import {createAppSlice} from '@/common/utils';
 import {tasksApi} from '@/features/todolists/api/tasksApi';
-import {DomainTask, UpdateTaskModel} from '@/features/todolists/api/tasksApi.types';
+import {DomainTask, domainTaskSchema, UpdateTaskModel} from '@/features/todolists/api/tasksApi.types';
 import {RootState} from '@/app/store';
 import {changeAppStatus, setAppError} from '@/app/app-slice';
 import {ResultCode} from '@/common/enum';
@@ -22,6 +22,7 @@ export const tasksSlice = createAppSlice({
                 try {
                     thunkAPI.dispatch(changeAppStatus({status: 'loading'}))
                     const res = await tasksApi.getTasks(todolistId)
+                    domainTaskSchema.array().parse(res.data.items)
                     thunkAPI.dispatch(changeAppStatus({status: 'success'}))
                     return {todolistId, tasks: res.data.items}
                 } catch (error) {
@@ -86,7 +87,7 @@ export const tasksSlice = createAppSlice({
                     if (res.data.resultCode === ResultCode.Success) {
                         return {task: res.data.data.item}
                     } else {
-                        handleServerAppError(res.data.data.item, thunkAPI.dispatch)
+                        handleServerAppError(res.data, thunkAPI.dispatch)
                         return thunkAPI.rejectWithValue(null)
                     }
                 } catch (error) {

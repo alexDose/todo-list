@@ -13,7 +13,6 @@ import {
 } from '@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.styles'
 import {DomainTask} from '@/features/todolists/api/tasksApi.types';
 import {TaskStatus} from '@/common/enum';
-import {changeTodolistStatusAC} from '@/features/todolists/model/todolists-slice';
 import {useState} from 'react';
 
 type Props = {

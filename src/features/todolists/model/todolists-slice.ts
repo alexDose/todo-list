@@ -102,7 +102,6 @@ export const todolistsSlice = createAppSlice({
                 if (index !== -1) {
                     state[index].entityStatus = action.payload.entityStatus
                 }
-
             }),
 
         }),
