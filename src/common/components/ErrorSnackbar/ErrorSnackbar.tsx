@@ -5,7 +5,6 @@ import {useAppDispatch, useAppSelector} from '@/common/hooks';
 import {selectError, setAppError} from '@/app/app-slice';
 
 export const ErrorSnackbar = () => {
-
     const dispatch = useAppDispatch()
     const appError = useAppSelector(selectError)
 
@@ -13,7 +12,7 @@ export const ErrorSnackbar = () => {
         if (reason === 'clickaway') {
             return
         }
-        dispatch(setAppError(null))
+        dispatch(setAppError({error: null}))
     }
 
     return (

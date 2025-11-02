@@ -24,9 +24,15 @@ export const tasksSlice = createAppSlice({
                     const res = await tasksApi.getTasks(todolistId)
                     domainTaskSchema.array().parse(res.data.items)
                     thunkAPI.dispatch(changeAppStatus({status: 'success'}))
-                    return {todolistId, tasks: res.data.items}
+                    if (res.data) {
+                        return {todolistId, tasks: res.data.items}
+                    } else {
+                        handleServerAppError(res.data, thunkAPI.dispatch)
+                        return thunkAPI.rejectWithValue(null)
+                    }
                 } catch (error) {
                     thunkAPI.dispatch(changeAppStatus({status: 'failed'}))
+                    handleServerNetworkError(error, thunkAPI.dispatch)
                     return thunkAPI.rejectWithValue(null)
                 }
             },
@@ -61,7 +67,7 @@ export const tasksSlice = createAppSlice({
                     if (res.data.resultCode === ResultCode.Success) {
                         return {task: res.data.data.item}
                     } else {
-                        handleServerAppError(res.data.data.item, thunkAPI.dispatch)
+                        handleServerAppError(res.data, thunkAPI.dispatch)
                         return thunkAPI.rejectWithValue(null)
                     }
                 } catch (error) {
@@ -71,8 +77,6 @@ export const tasksSlice = createAppSlice({
             },
             {
                 fulfilled: (state, action) => {
-                    console.log(action)
-
                     const task = state[action.payload.task.todoListId].find((task) => task.id === action.payload.task.id)
                     if (task) {
                         Object.assign(task, action.payload.task)
@@ -111,8 +115,8 @@ export const tasksSlice = createAppSlice({
                         handleServerAppError(res.data, thunkAPI.dispatch)
                         return thunkAPI.rejectWithValue(null)
                     }
-
                 } catch (error) {
+                    handleServerNetworkError(error, thunkAPI.dispatch)
                     return thunkAPI.rejectWithValue(null)
                 }
             },

@@ -12,7 +12,6 @@ export const handleServerNetworkError = (error: unknown, dispatch: Dispatch) => 
             break
 
         case error instanceof z.ZodError:
-            console.table(error.issues)
             errorMessage = 'Zod error. Смотри консоль'
             break
 

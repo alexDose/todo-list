@@ -1,5 +1,5 @@
 import {selectThemeMode} from "@/app/app-slice"
-import {useAppSelector} from "@/common/hooks"
+import {useAppDispatch, useAppSelector} from "@/common/hooks"
 import {getTheme} from "@/common/theme"
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -9,14 +9,19 @@ import FormGroup from '@mui/material/FormGroup'
 import FormLabel from '@mui/material/FormLabel'
 import Grid from "@mui/material/Grid2"
 import TextField from '@mui/material/TextField'
-import {SubmitHandler, useForm, Controller} from 'react-hook-form';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {LoginInputs, loginSchema} from '@/features/auth/lib/schemas';
+import {loginTC, selectIsAuth} from '@/features/auth/model/auth-slice';
+import {Navigate} from 'react-router';
 
 export const Login = () => {
     const themeMode = useAppSelector(selectThemeMode)
+    const isLoggedIn = useAppSelector(selectIsAuth)
 
     const theme = getTheme(themeMode)
+
+    const dispatch = useAppDispatch()
 
     const {
         register,
@@ -30,8 +35,12 @@ export const Login = () => {
     })
 
     const onSubmit: SubmitHandler<LoginInputs> = data => {
-        console.log(data)
+        dispatch(loginTC(data))
         reset()
+    }
+
+    if (isLoggedIn) {
+        return <Navigate to={'/'}/>
     }
 
     return (
@@ -69,14 +78,19 @@ export const Login = () => {
                                            message: 'Incorrect email address',
                                        },
                                    })}/>
-                        {errors.email && <span style={{color: 'red'}}>{errors.email.message}</span>}
-                        <TextField type="password" label="Password" margin="normal" {...register('password')}/>
+                        <TextField type="password"
+                                   label="Password"
+                                   margin="normal"
+                                   {...register('password')}/>
                         <FormControlLabel label="Remember me"
                                           control={
                                               <Controller
                                                   name={'rememberMe'}
                                                   control={control}
-                                                  render={({ field: { value, ...rest } }) => <Checkbox {...rest} checked={value} />}
+                                                  render={({field: {value, ...rest}}) =>
+                                                      <Checkbox {...rest}
+                                                                checked={value}
+                                                      />}
                                               />
                                           }
                         />
