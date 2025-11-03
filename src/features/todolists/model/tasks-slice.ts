@@ -3,10 +3,11 @@ import {createAppSlice} from '@/common/utils';
 import {tasksApi} from '@/features/todolists/api/tasksApi';
 import {DomainTask, domainTaskSchema, UpdateTaskModel} from '@/features/todolists/api/tasksApi.types';
 import {RootState} from '@/app/store';
-import {changeAppStatus, setAppError} from '@/app/app-slice';
+import {setAppStatus} from '@/app/app-slice';
 import {ResultCode} from '@/common/enum';
 import {handleServerAppError} from '@/common/utils/handleServerAppError';
 import {handleServerNetworkError} from '@/common/utils/handleServerNetworkError';
+import {clearTodolistsAndTasks} from '@/common/actions';
 
 export type TasksState = Record<string, DomainTask[]>
 
@@ -20,10 +21,10 @@ export const tasksSlice = createAppSlice({
         fetchTasksTC: create.asyncThunk(
             async (todolistId: string, thunkAPI) => {
                 try {
-                    thunkAPI.dispatch(changeAppStatus({status: 'loading'}))
+                    thunkAPI.dispatch(setAppStatus({status: 'loading'}))
                     const res = await tasksApi.getTasks(todolistId)
                     domainTaskSchema.array().parse(res.data.items)
-                    thunkAPI.dispatch(changeAppStatus({status: 'success'}))
+                    thunkAPI.dispatch(setAppStatus({status: 'success'}))
                     if (res.data) {
                         return {todolistId, tasks: res.data.items}
                     } else {
@@ -31,7 +32,7 @@ export const tasksSlice = createAppSlice({
                         return thunkAPI.rejectWithValue(null)
                     }
                 } catch (error) {
-                    thunkAPI.dispatch(changeAppStatus({status: 'failed'}))
+                    thunkAPI.dispatch(setAppStatus({status: 'failed'}))
                     handleServerNetworkError(error, thunkAPI.dispatch)
                     return thunkAPI.rejectWithValue(null)
                 }
@@ -141,6 +142,9 @@ export const tasksSlice = createAppSlice({
             })
             .addCase(deleteTodolistTC.fulfilled, (state, action) => {
                 delete state[action.payload.id]
+            })
+            .addCase(clearTodolistsAndTasks.type, () => {
+                return  {}
             })
     },
 })

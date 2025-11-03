@@ -12,13 +12,10 @@ import TextField from '@mui/material/TextField'
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {LoginInputs, loginSchema} from '@/features/auth/lib/schemas';
-import {loginTC, selectIsAuth} from '@/features/auth/model/auth-slice';
-import {Navigate} from 'react-router';
+import {loginTC} from '@/features/auth/model/auth-slice';
 
 export const Login = () => {
     const themeMode = useAppSelector(selectThemeMode)
-    const isLoggedIn = useAppSelector(selectIsAuth)
-
     const theme = getTheme(themeMode)
 
     const dispatch = useAppDispatch()
@@ -37,10 +34,6 @@ export const Login = () => {
     const onSubmit: SubmitHandler<LoginInputs> = data => {
         dispatch(loginTC(data))
         reset()
-    }
-
-    if (isLoggedIn) {
-        return <Navigate to={'/'}/>
     }
 
     return (

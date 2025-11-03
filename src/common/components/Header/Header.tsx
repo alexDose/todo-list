@@ -1,21 +1,24 @@
 import MenuIcon from '@mui/icons-material/Menu'
-import { NavButton } from '@/common/components'
+import {NavButton} from '@/common/components'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import Container from '@mui/material/Container'
 import Switch from '@mui/material/Switch'
-import { useAppSelector } from '@/common/hooks'
-import { getTheme } from '@/common/theme'
+import {useAppDispatch, useAppSelector} from '@/common/hooks'
+import {getTheme} from '@/common/theme'
 import {changeThemeMode, selectStatus, selectThemeMode} from '@/app/app-slice'
-import { useAppDispatch } from '@/common/hooks'
-import { containerSx } from '@/common/styles'
-import { Clock } from '@/common/components/Clock/Clock'
+import {containerSx} from '@/common/styles'
+import {Clock} from '@/common/components/Clock/Clock'
 import LinearProgress from '@mui/material/LinearProgress'
+import {logoutTC, selectIsLoggedIn} from '@/features/auth/model/auth-slice';
+import {PATH} from '@/common/routing/Routing';
+import {NavLink} from 'react-router';
 
 export const Header = () => {
     const themeMode = useAppSelector(selectThemeMode)
     const appStatus = useAppSelector(selectStatus)
+    const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
     const theme = getTheme(themeMode)
 
@@ -24,20 +27,24 @@ export const Header = () => {
     const changeThemeModeApp = () => {
         dispatch(changeThemeMode(themeMode === 'light' ? 'dark' : 'light'))
     }
+    const logout = () => {
+        dispatch(logoutTC())
+    }
 
     return (
-        <AppBar position="static" sx={{ mb: '30px' }}>
+        <AppBar position="static" sx={{mb: '30px'}}>
             <Toolbar>
                 <Container maxWidth={'lg'} sx={containerSx}>
                     <IconButton color="inherit">
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <div>
-                        <NavButton>Sign in</NavButton>
-                        <NavButton>Sign up</NavButton>
-                        <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
-                        <Switch color={'default'} onChange={changeThemeModeApp} />
-                        <Clock />
+                        {isLoggedIn && <NavButton onClick={logout}>Logout</NavButton>}
+                        {isLoggedIn && <NavLink to={PATH.FAQ}>
+                            <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
+                        </NavLink>}
+                        <Switch color={'default'} onChange={changeThemeModeApp}/>
+                        <Clock/>
                     </div>
                 </Container>
             </Toolbar>

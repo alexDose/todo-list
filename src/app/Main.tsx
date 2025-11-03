@@ -1,5 +1,5 @@
 import {CreateItemForm} from '@/common/components'
-import './App.css'
+import './App.module.css'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid2'
 import {Todolists} from '@/features/todolists/ui/Todolists/Todolists'

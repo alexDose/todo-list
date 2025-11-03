@@ -14,7 +14,7 @@ export const appSlice = createSlice({
         changeThemeMode: (state, action) => {
             state.themeMode = action.payload
         },
-        changeAppStatus: (state, action) => {
+        setAppStatus: (state, action) => {
             state.status = action.payload.status
         },
         setAppError: (state, action) => {
@@ -28,6 +28,6 @@ export const appSlice = createSlice({
     }
 })
 
-export const {changeThemeMode, changeAppStatus, setAppError} = appSlice.actions
+export const {changeThemeMode, setAppStatus, setAppError} = appSlice.actions
 export const {selectThemeMode, selectStatus, selectError} = appSlice.selectors
 export const appReducer = appSlice.reducer

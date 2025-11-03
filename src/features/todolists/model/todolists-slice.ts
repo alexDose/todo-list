@@ -1,11 +1,12 @@
 import {Todolist} from '@/features/todolists/api/todolistsApi.types';
 import {todolistsApi} from '@/features/todolists/api/todolistsApi';
 import {createAppSlice} from '@/common/utils';
-import {changeAppStatus} from '@/app/app-slice';
+import {setAppStatus} from '@/app/app-slice';
 import {RequestStatus} from '@/common/types';
 import {handleServerAppError} from '@/common/utils/handleServerAppError';
 import {handleServerNetworkError} from '@/common/utils/handleServerNetworkError';
 import {ResultCode} from '@/common/enum';
+import {clearTodolistsAndTasks} from '@/common/actions';
 
 export type DomainTodolist = Todolist & {
     filter: FilterValues
@@ -25,9 +26,9 @@ export const todolistsSlice = createAppSlice({
             fetchTodolistsTC: create.asyncThunk(
                 async (_, thunkAPI) => {
                     try {
-                        thunkAPI.dispatch(changeAppStatus({status: 'loading'}))
+                        thunkAPI.dispatch(setAppStatus({status: 'loading'}))
                         const res = await todolistsApi.getTodolists()
-                        thunkAPI.dispatch(changeAppStatus({status: 'success'}))
+                        thunkAPI.dispatch(setAppStatus({status: 'success'}))
                         if (res.data) {
                             return {todolists: res.data}
                         } else {
@@ -36,7 +37,7 @@ export const todolistsSlice = createAppSlice({
                         }
                     } catch (error) {
                         handleServerNetworkError(error, thunkAPI.dispatch)
-                        thunkAPI.dispatch(changeAppStatus({status: 'failed'}))
+                        thunkAPI.dispatch(setAppStatus({status: 'failed'}))
                         return thunkAPI.rejectWithValue(null)
                     }
                 },
@@ -131,8 +132,14 @@ export const todolistsSlice = createAppSlice({
                     state[index].entityStatus = action.payload.entityStatus
                 }
             }),
-
         }),
+        extraReducers: builder => {
+            builder
+                .addCase(clearTodolistsAndTasks.type, (state, action) => {
+                        return []
+                    }
+                )
+        }
     }
 )
 

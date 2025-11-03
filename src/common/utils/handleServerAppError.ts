@@ -1,5 +1,5 @@
 import type { Dispatch } from '@reduxjs/toolkit'
-import {changeAppStatus, setAppError} from '@/app/app-slice';
+import {setAppStatus, setAppError} from '@/app/app-slice';
 import {BaseResponseType} from '@/common/types';
 
 export const handleServerAppError = <T,>(data: BaseResponseType<T>, dispatch: Dispatch) => {
@@ -8,5 +8,5 @@ export const handleServerAppError = <T,>(data: BaseResponseType<T>, dispatch: Di
     } else {
         dispatch(setAppError({ error: 'Some error occurred' }))
     }
-    dispatch(changeAppStatus({ status: 'failed' }))
+    dispatch(setAppStatus({ status: 'failed' }))
 }

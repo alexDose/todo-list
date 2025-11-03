@@ -1,4 +1,4 @@
-import {changeAppStatus, setAppError} from '@/app/app-slice.ts'
+import {setAppStatus, setAppError} from '@/app/app-slice.ts'
 import type {Dispatch} from '@reduxjs/toolkit'
 import axios from 'axios'
 import { z } from 'zod/v4'
@@ -24,5 +24,5 @@ export const handleServerNetworkError = (error: unknown, dispatch: Dispatch) => 
     }
 
     dispatch(setAppError({ error: errorMessage }))
-    dispatch(changeAppStatus({ status: 'failed' }))
+    dispatch(setAppStatus({ status: 'failed' }))
 }
