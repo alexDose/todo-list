@@ -1,5 +1,5 @@
 import {Todolist} from '@/features/todolists/api/todolistsApi.types';
-import {todolistsApi} from '@/features/todolists/api/todolistsApi';
+import {_todolistsApi} from '@/features/todolists/api/_todolistsApi';
 import {createAppSlice} from '@/common/utils';
 import {setAppStatus} from '@/app/app-slice';
 import {RequestStatus} from '@/common/types';
@@ -27,7 +27,7 @@ export const todolistsSlice = createAppSlice({
                 async (_, thunkAPI) => {
                     try {
                         thunkAPI.dispatch(setAppStatus({status: 'loading'}))
-                        const res = await todolistsApi.getTodolists()
+                        const res = await _todolistsApi.getTodolists()
                         thunkAPI.dispatch(setAppStatus({status: 'success'}))
                         if (res.data) {
                             return {todolists: res.data}
@@ -53,7 +53,7 @@ export const todolistsSlice = createAppSlice({
                 async (id: string, thunkAPI) => {
                     try {
                         thunkAPI.dispatch(changeTodolistStatusAC({id, entityStatus: 'loading'}))
-                        const res = await todolistsApi.deleteTodolist(id)
+                        const res = await _todolistsApi.deleteTodolist(id)
                         if (res.data.resultCode === ResultCode.Success) {
                             return {id}
                         } else {
@@ -78,7 +78,7 @@ export const todolistsSlice = createAppSlice({
             createTodolistTC: create.asyncThunk(
                 async (title: string, thunkAPI) => {
                     try {
-                        const res = await todolistsApi.createTodolist(title)
+                        const res = await _todolistsApi.createTodolist(title)
                         if (res.data.resultCode === ResultCode.Success) {
                             return {todolist: res.data.data.item}
                         } else {
@@ -99,7 +99,7 @@ export const todolistsSlice = createAppSlice({
             changeTodolistTitleTC: create.asyncThunk(
                 async (payload: { id: string; title: string }, thunkAPI) => {
                     try {
-                        const res = await todolistsApi.changeTodolistTitle(payload)
+                        const res = await _todolistsApi.changeTodolistTitle(payload)
                         if (res.data.resultCode === ResultCode.Success) {
                             return payload
                         } else {

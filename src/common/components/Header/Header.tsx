@@ -7,18 +7,23 @@ import Container from '@mui/material/Container'
 import Switch from '@mui/material/Switch'
 import {useAppDispatch, useAppSelector} from '@/common/hooks'
 import {getTheme} from '@/common/theme'
-import {changeThemeMode, selectStatus, selectThemeMode} from '@/app/app-slice'
+import {changeThemeMode, selectIsLoggedIn, selectStatus, selectThemeMode, setIsLoggedIn} from '@/app/app-slice'
 import {containerSx} from '@/common/styles'
 import {Clock} from '@/common/components/Clock/Clock'
 import LinearProgress from '@mui/material/LinearProgress'
-import {logoutTC, selectIsLoggedIn} from '@/features/auth/model/auth-slice';
 import {PATH} from '@/common/routing/Routing';
 import {NavLink} from 'react-router';
+import {useLogoutMutation} from '@/features/auth/api/authApi';
+import {ResultCode} from '@/common/enum';
+import {AUTH_TOKEN} from '@/common/constats';
+import {clearTodolistsAndTasks} from '@/common/actions';
 
 export const Header = () => {
     const themeMode = useAppSelector(selectThemeMode)
     const appStatus = useAppSelector(selectStatus)
     const isLoggedIn = useAppSelector(selectIsLoggedIn)
+
+    const [logout] = useLogoutMutation()
 
     const theme = getTheme(themeMode)
 
@@ -27,8 +32,13 @@ export const Header = () => {
     const changeThemeModeApp = () => {
         dispatch(changeThemeMode(themeMode === 'light' ? 'dark' : 'light'))
     }
-    const logout = () => {
-        dispatch(logoutTC())
+    const logoutHandler = async () => {
+        const res = await logout()
+        if (res.data.resultCode === ResultCode.Success) {
+            dispatch(setIsLoggedIn({isLoggerdIn: false}))
+            localStorage.removeItem(AUTH_TOKEN)
+            dispatch(clearTodolistsAndTasks())
+        }
     }
 
     return (
@@ -39,7 +49,7 @@ export const Header = () => {
                         <MenuIcon/>
                     </IconButton>
                     <div>
-                        {isLoggedIn && <NavButton onClick={logout}>Logout</NavButton>}
+                        {isLoggedIn && <NavButton onClick={logoutHandler}>Logout</NavButton>}
                         {isLoggedIn && <NavLink to={PATH.FAQ}>
                             <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
                         </NavLink>}

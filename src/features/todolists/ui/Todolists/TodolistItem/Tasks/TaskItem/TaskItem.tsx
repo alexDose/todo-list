@@ -3,9 +3,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Checkbox from '@mui/material/Checkbox'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import {deleteTaskTC, updateTaskTC} from '@/features/todolists/model/tasks-slice'
 import {ChangeEvent} from 'react/index'
-import {useAppDispatch} from '@/common/hooks'
 import {ListItem} from '@mui/material'
 import {
     getListItemsSx,
@@ -14,43 +12,43 @@ import {
 import {DomainTask} from '@/features/todolists/api/tasksApi.types';
 import {TaskStatus} from '@/common/enum';
 import {useState} from 'react';
+import {useDeleteTaskMutation, useUpdateTaskMutation} from '@/features/todolists/api/tasksApi';
+import {getModelForTask} from '@/common/helpers';
 
 type Props = {
     task: DomainTask
-    todolistId: string
 }
-export const TaskItem = ({ task, todolistId }: Props) => {
-    const { id, title } = task
+export const TaskItem = ({task}: Props) => {
+    const {id, title, todoListId} = task
     const isTaskCompleted = task.status === TaskStatus.Completed
     const [isDisabled, setDisabled] = useState(false)
 
-    const dispatch = useAppDispatch()
+    const [deleteTask] = useDeleteTaskMutation()
+    const [updateTask] = useUpdateTaskMutation()
 
-    const deleteTask = () => {
+    const removeTask = () => {
         setDisabled(true)
-        dispatch(deleteTaskTC({ todolistId, taskId: id }))
+        deleteTask({todolistId: todoListId, taskId: id})
     }
+
     const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(
-            updateTaskTC({
-                todolistId,
-                taskId: id,
-                domainModel: {status: e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New},
-            }),
-        )
+        const model = getModelForTask(task, {status: e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New})
+        updateTask({todolistId: todoListId, taskId: id, model})
     }
+
     const changeTaskTitle = (title: string) => {
-        dispatch(updateTaskTC({ todolistId, taskId: id, domainModel: {title} }))
+        const model = getModelForTask(task,{title})
+        updateTask({todolistId: todoListId, taskId: id, model})
     }
 
     return (
         <ListItem key={task.id} sx={getListItemSx}>
             <Box sx={getListItemsSx(isTaskCompleted)}>
-                <Checkbox checked={isTaskCompleted} onChange={changeTaskStatus} />
-                <EditableSpan value={title} onChange={changeTaskTitle} />
+                <Checkbox disabled={isDisabled} checked={isTaskCompleted} onChange={changeTaskStatus}/>
+                <EditableSpan disabled={isDisabled} value={title} onChange={changeTaskTitle}/>
             </Box>
-            <IconButton disabled={isDisabled} onClick={deleteTask}>
-                <DeleteOutlineIcon />
+            <IconButton disabled={isDisabled} onClick={removeTask}>
+                <DeleteOutlineIcon/>
             </IconButton>
         </ListItem>
     )

@@ -1,6 +1,6 @@
 import {createTodolistTC, deleteTodolistTC} from './todolists-slice'
 import {createAppSlice} from '@/common/utils';
-import {tasksApi} from '@/features/todolists/api/tasksApi';
+import {tasksApi} from '@/features/todolists/api/_tasksApi';
 import {DomainTask, domainTaskSchema, UpdateTaskModel} from '@/features/todolists/api/tasksApi.types';
 import {RootState} from '@/app/store';
 import {setAppStatus} from '@/app/app-slice';

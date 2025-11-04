@@ -1,15 +1,26 @@
-import {LoginInputs} from '@/features/auth/lib/schemas';
-import {instance} from '@/common/instance';
+import {baseApi} from '@/app/baseApi';
 import {BaseResponseType} from '@/common/types';
+import {LoginInputs} from '@/features/auth/lib/schemas';
 
-export const authApi = {
-    login(payload: LoginInputs) {
-        return instance.post<BaseResponseType<{ userId: number; token: string }>>('auth/login', payload)
-    },
-    logout() {
-        return instance.delete<BaseResponseType>('auth/login')
-    },
-    me() {
-        return instance.get<BaseResponseType<{ id: number, email: string, login: string }>>('auth/me')
-    },
-}
+export const authApi = baseApi.injectEndpoints({
+    endpoints: build => ({
+        me: build.query<BaseResponseType<{ id: number; email: string; login: string }>, void>({
+            query: () => 'auth/me',
+        }),
+        login: build.mutation<BaseResponseType<{ userId: number; token: string }>, LoginInputs>({
+            query: body => ({
+                url: 'auth/login',
+                method: 'POST',
+                body,
+            }),
+        }),
+        logout: build.mutation<BaseResponseType, void>({
+            query: () => ({
+                url: 'auth/login',
+                method: 'DELETE',
+            }),
+        }),
+    }),
+})
+
+export const { useMeQuery, useLoginMutation, useLogoutMutation } = authApi

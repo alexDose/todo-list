@@ -4,17 +4,17 @@ import AddBoxIcon from '@mui/icons-material/AddBox'
 import IconButton from '@mui/material/IconButton'
 
 type Props = {
-    onCreateItem: (title: string) => void
+    addItem: (title: string) => void
     disabled?: boolean
 }
 
-export const CreateItemForm = ({ onCreateItem, disabled }: Props) => {
+export const CreateItemForm = ({ addItem, disabled }: Props) => {
     const [title, setTitle] = useState('')
     const [error, setError] = useState<string | null>(null)
 
     const createItemHandler = () => {
         if (title.trim().length !== 0) {
-            onCreateItem(title)
+            addItem(title)
             setTitle('')
         } else {
             setError('Title is required')

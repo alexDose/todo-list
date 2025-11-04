@@ -4,9 +4,10 @@ import { type ChangeEvent, useState } from 'react'
 type Props = {
     value: string
     onChange: (title: string) => void
+    disabled?: boolean
 }
 
-export const EditableSpan = ({ value, onChange }: Props) => {
+export const EditableSpan = ({ value, onChange, disabled }: Props) => {
     const [title, setTitle] = useState(value)
     const [isEditMode, setIsEditMode] = useState(false)
     const [error, setError] = useState(false)
@@ -34,6 +35,7 @@ export const EditableSpan = ({ value, onChange }: Props) => {
         <>
             {isEditMode ? (
                 <TextField
+                    disabled={disabled}
                     sx={error && { background: 'rgba(245,206,211,0.84)' }}
                     value={title}
                     size={'small'}

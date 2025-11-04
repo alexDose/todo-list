@@ -1,4 +1,4 @@
-import {selectThemeMode} from "@/app/app-slice"
+import {selectStatus, selectThemeMode, setAppStatus, setIsLoggedIn} from "@/app/app-slice"
 import {useAppDispatch, useAppSelector} from "@/common/hooks"
 import {getTheme} from "@/common/theme"
 import Button from '@mui/material/Button'
@@ -12,11 +12,17 @@ import TextField from '@mui/material/TextField'
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {LoginInputs, loginSchema} from '@/features/auth/lib/schemas';
-import {loginTC} from '@/features/auth/model/auth-slice';
+import {useLoginMutation} from '@/features/auth/api/authApi';
+import {ResultCode} from '@/common/enum';
+import {AUTH_TOKEN} from '@/common/constats';
+import {handleServerNetworkError} from '@/common/utils/handleServerNetworkError';
+import {handleServerAppError} from '@/common/utils/handleServerAppError';
 
 export const Login = () => {
     const themeMode = useAppSelector(selectThemeMode)
     const theme = getTheme(themeMode)
+    const isLoading = useAppSelector(selectStatus)
+    const [login] = useLoginMutation()
 
     const dispatch = useAppDispatch()
 
@@ -31,9 +37,25 @@ export const Login = () => {
         defaultValues: {email: '', password: '', rememberMe: false}
     })
 
-    const onSubmit: SubmitHandler<LoginInputs> = data => {
-        dispatch(loginTC(data))
-        reset()
+    const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+        try{
+            dispatch(setAppStatus({status: 'loading'}))
+            const res = await login(data)
+            if (res.data.resultCode === ResultCode.Success) {
+                if (data.rememberMe) {
+                    localStorage.setItem(AUTH_TOKEN, res.data.data.token);
+                }
+                dispatch(setIsLoggedIn({isLoggedIn: true}))
+                dispatch(setAppStatus({status: 'succeeded'}))
+                localStorage.setItem(AUTH_TOKEN, res.data.data.token)
+                reset()
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        } catch(e) {
+            handleServerNetworkError(e, dispatch)
+            dispatch(setAppStatus({status: 'failed'}))
+        }
     }
 
     return (
@@ -87,7 +109,7 @@ export const Login = () => {
                                               />
                                           }
                         />
-                        <Button type="submit" variant="contained" color="primary">
+                        <Button disabled={isLoading === 'loading'} type="submit" variant="contained" color="primary">
                             Login
                         </Button>
                     </FormGroup>

@@ -2,9 +2,9 @@ import {type CSSProperties, useEffect, useState} from 'react'
 import Checkbox from '@mui/material/Checkbox'
 import {CreateItemForm, EditableSpan} from '@/common/components'
 import {Todolist} from '@/features/todolists/api/todolistsApi.types'
-import {todolistsApi} from '@/features/todolists/api/todolistsApi'
+import {_todolistsApi} from '@/features/todolists/api/_todolistsApi'
 import {ChangeEvent} from 'react/index';
-import {tasksApi} from '@/features/todolists/api/tasksApi';
+import {tasksApi} from '@/features/todolists/api/_tasksApi';
 import {DomainTask, UpdateTaskModel} from '@/features/todolists/api/tasksApi.types';
 import {TaskStatus} from '@/common/enum';
 
@@ -13,7 +13,7 @@ export const AppHttpRequests = () => {
     const [tasks, setTasks] = useState<Record<string, DomainTask[]>>({})
 
     useEffect(() => {
-        todolistsApi.getTodolists().then(res => {
+        _todolistsApi.getTodolists().then(res => {
             const todolists = res.data
             setTodolists(todolists)
             todolists.map((todolist) => {
@@ -25,14 +25,14 @@ export const AppHttpRequests = () => {
     }, [])
 
     const createTodolist = (title: string) => {
-        todolistsApi.createTodolist(title).then((res) => {
+        _todolistsApi.createTodolist(title).then((res) => {
             setTodolists([res.data.data.item, ...todolists])
             setTasks({...tasks, [res.data.data.item.id]: []})
         })
     }
 
     const deleteTodolist = (id: string) => {
-        todolistsApi.deleteTodolist(id).then((res) => {
+        _todolistsApi.deleteTodolist(id).then((res) => {
             if (res.data.resultCode === 0) {
                 setTodolists(todolists.filter((todolist) => todolist.id !== id))
                 delete tasks[id]
@@ -44,7 +44,7 @@ export const AppHttpRequests = () => {
     }
 
     const changeTodolistTitle = (id: string, title: string) => {
-        todolistsApi.changeTodolistTitle({id, title}).then((res) => {
+        _todolistsApi.changeTodolistTitle({id, title}).then((res) => {
             if (res.data.resultCode === 0) {
                 setTodolists(todolists.map((todolist) => (todolist.id === id ? {...todolist, title} : todolist)))
             } else {
@@ -100,7 +100,7 @@ export const AppHttpRequests = () => {
 
     return (
         <div style={{margin: '20px'}}>
-            <CreateItemForm onCreateItem={createTodolist}/>
+            <CreateItemForm addItem={createTodolist}/>
             {todolists.map((todolist: Todolist) => (
                 <div key={todolist.id} style={container}>
                     <div>
@@ -110,7 +110,7 @@ export const AppHttpRequests = () => {
                         />
                         <button onClick={() => deleteTodolist(todolist.id)}>x</button>
                     </div>
-                    <CreateItemForm onCreateItem={(title) => createTask(todolist.id, title)}/>
+                    <CreateItemForm addItem={(title) => createTask(todolist.id, title)}/>
                     {tasks[todolist.id]?.map((task: any) => (
                         <div key={task.id}>
                             <Checkbox checked={task.status === TaskStatus.Completed}
