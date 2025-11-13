@@ -1,2 +1,2 @@
 export { getFilteredTasks } from './getFilteredTasks'
-export {getModelForTask} from './getModelForTask'
+export { getModelForTask } from './getModelForTask'

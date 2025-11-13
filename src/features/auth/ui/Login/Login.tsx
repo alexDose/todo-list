@@ -1,22 +1,20 @@
-import {selectStatus, selectThemeMode, setAppStatus, setIsLoggedIn} from "@/app/app-slice"
-import {useAppDispatch, useAppSelector} from "@/common/hooks"
-import {getTheme} from "@/common/theme"
+import {selectStatus, selectThemeMode, setIsLoggedIn} from '@/app/app-slice'
+import {useAppDispatch, useAppSelector} from '@/common/hooks'
+import {getTheme} from '@/common/theme'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
 import FormLabel from '@mui/material/FormLabel'
-import Grid from "@mui/material/Grid2"
+import Grid from '@mui/material/Grid2'
 import TextField from '@mui/material/TextField'
-import {Controller, SubmitHandler, useForm} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {LoginInputs, loginSchema} from '@/features/auth/lib/schemas';
-import {useLoginMutation} from '@/features/auth/api/authApi';
-import {ResultCode} from '@/common/enum';
-import {AUTH_TOKEN} from '@/common/constats';
-import {handleServerNetworkError} from '@/common/utils/handleServerNetworkError';
-import {handleServerAppError} from '@/common/utils/handleServerAppError';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {LoginInputs, loginSchema} from '@/features/auth/lib/schemas'
+import {useLoginMutation} from '@/features/auth/api/authApi'
+import {ResultCode} from '@/common/enum'
+import {AUTH_TOKEN} from '@/common/constats'
 
 export const Login = () => {
     const themeMode = useAppSelector(selectThemeMode)
@@ -31,30 +29,21 @@ export const Login = () => {
         handleSubmit,
         reset,
         control,
-        formState: {errors},
+        formState: { errors },
     } = useForm<LoginInputs>({
         resolver: zodResolver(loginSchema),
-        defaultValues: {email: '', password: '', rememberMe: false}
+        defaultValues: { email: '', password: '', rememberMe: false },
     })
 
     const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
-        try{
-            dispatch(setAppStatus({status: 'loading'}))
-            const res = await login(data)
-            if (res.data.resultCode === ResultCode.Success) {
-                if (data.rememberMe) {
-                    localStorage.setItem(AUTH_TOKEN, res.data.data.token);
-                }
-                dispatch(setIsLoggedIn({isLoggedIn: true}))
-                dispatch(setAppStatus({status: 'succeeded'}))
+        const res = await login(data)
+        if (res.data.resultCode === ResultCode.Success) {
+            if (data.rememberMe) {
                 localStorage.setItem(AUTH_TOKEN, res.data.data.token)
-                reset()
-            } else {
-                handleServerAppError(res.data, dispatch)
             }
-        } catch(e) {
-            handleServerNetworkError(e, dispatch)
-            dispatch(setAppStatus({status: 'failed'}))
+            dispatch(setIsLoggedIn({isLoggedIn: true}))
+            localStorage.setItem(AUTH_TOKEN, res.data.data.token)
+            reset()
         }
     }
 
@@ -66,7 +55,7 @@ export const Login = () => {
                         <p>
                             To login get registered
                             <a
-                                style={{color: theme.palette.primary.main, marginLeft: "5px"}}
+                                style={{ color: theme.palette.primary.main, marginLeft: '5px' }}
                                 href="https://social-network.samuraijs.com"
                                 target="_blank"
                                 rel="noreferrer"
@@ -83,31 +72,28 @@ export const Login = () => {
                         </p>
                     </FormLabel>
                     <FormGroup>
-                        <TextField label="Email"
-                                   margin="normal"
-                                   error={!!errors.email}
-                                   {...register('email', {
-                                       required: 'Email is required',
-                                       pattern: {
-                                           value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                                           message: 'Incorrect email address',
-                                       },
-                                   })}/>
-                        <TextField type="password"
-                                   label="Password"
-                                   margin="normal"
-                                   {...register('password')}/>
-                        <FormControlLabel label="Remember me"
-                                          control={
-                                              <Controller
-                                                  name={'rememberMe'}
-                                                  control={control}
-                                                  render={({field: {value, ...rest}}) =>
-                                                      <Checkbox {...rest}
-                                                                checked={value}
-                                                      />}
-                                              />
-                                          }
+                        <TextField
+                            label="Email"
+                            margin="normal"
+                            error={!!errors.email}
+                            {...register('email', {
+                                required: 'Email is required',
+                                pattern: {
+                                    value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                                    message: 'Incorrect email address',
+                                },
+                            })}
+                        />
+                        <TextField type="password" label="Password" margin="normal" {...register('password')} />
+                        <FormControlLabel
+                            label="Remember me"
+                            control={
+                                <Controller
+                                    name={'rememberMe'}
+                                    control={control}
+                                    render={({ field: { value, ...rest } }) => <Checkbox {...rest} checked={value} />}
+                                />
+                            }
                         />
                         <Button disabled={isLoading === 'loading'} type="submit" variant="contained" color="primary">
                             Login

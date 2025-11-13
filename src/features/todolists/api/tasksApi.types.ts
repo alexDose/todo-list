@@ -1,4 +1,4 @@
-import {TaskPriority, TaskStatus} from '@/common/enum';
+import { TaskPriority, TaskStatus } from '@/common/enum'
 import { z } from 'zod/v4'
 
 export const domainTaskSchema = z.object({
@@ -30,4 +30,3 @@ export type GetTasksResponse = {
     totalCount: number
     items: DomainTask[]
 }
-

@@ -1,5 +1,5 @@
-import {Navigate, Outlet} from 'react-router';
-import {ReactNode} from 'react';
+import { Navigate, Outlet } from 'react-router'
+import { ReactNode } from 'react'
 
 type PropsType = {
     children?: ReactNode
@@ -7,8 +7,9 @@ type PropsType = {
     redirectPath?: string
 }
 
-export const ProtectedRoute = ({children, isAllowed, redirectPath}: PropsType) => {
+export const ProtectedRoute = ({ children, isAllowed, redirectPath }: PropsType) => {
     if (!isAllowed) {
-        return <Navigate to={redirectPath}/>
+        return <Navigate to={redirectPath} />
     }
-    return children ? children : <Outlet />}
+    return children ? children : <Outlet />
+}

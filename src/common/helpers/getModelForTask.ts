@@ -1,4 +1,4 @@
-import {DomainTask, UpdateTaskModel} from '@/features/todolists/api/tasksApi.types';
+import { DomainTask, UpdateTaskModel } from '@/features/todolists/api/tasksApi.types'
 
 export const getModelForTask = (task: DomainTask, domainModel: Partial<UpdateTaskModel>) => {
     const model: UpdateTaskModel = {
@@ -8,7 +8,7 @@ export const getModelForTask = (task: DomainTask, domainModel: Partial<UpdateTas
         startDate: task.startDate,
         deadline: task.deadline,
         status: task.status,
-        ...domainModel
+        ...domainModel,
     }
     return model
 }

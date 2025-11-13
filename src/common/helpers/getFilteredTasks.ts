@@ -1,6 +1,6 @@
-import {FilterValues} from '@/features/todolists/model/todolists-slice'
-import {DomainTask} from '@/features/todolists/api/tasksApi.types';
-import {TaskStatus} from '@/common/enum';
+import { FilterValues } from '@/features/todolists/model/todolists-slice'
+import { DomainTask } from '@/features/todolists/api/tasksApi.types'
+import { TaskStatus } from '@/common/enum'
 
 export const getFilteredTasks = (tasks: DomainTask[], filter: FilterValues) => {
     let filteredTasks = tasks

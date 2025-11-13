@@ -1,10 +1,10 @@
 import axios from 'axios'
-import {AUTH_TOKEN} from '@/common/constats';
+import { AUTH_TOKEN } from '@/common/constats'
 
 export const instance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
     headers: {
-        "API-KEY": import.meta.env.VITE_API_KEY,
+        'API-KEY': import.meta.env.VITE_API_KEY,
     },
 })
 
